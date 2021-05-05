@@ -1,0 +1,39 @@
+{% extends "StudentBase.html" %}
+{% block username %}
+    {{ user }}
+{% endblock %}
+
+
+{% block content %}
+        {% for message in messages %}
+                {% if message.extra_tags == 'email' %}
+                  <div class="alert alert-danger" role="alert">
+                      {{ message }}
+                  </div>
+                {% endif %}
+        {% endfor %}
+
+        <div class="dropdown">
+          <button class="btn btn-white dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Select the Type of Request
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {% for i in token_types %}
+                  <a class="dropdown-item" href="{% url 'createtoken' token_type_id=i.token_id|add:'0' %}">{{i.token_type_name}}</a>
+                {% endfor %}
+          </div>
+        </div>
+    <br>
+    <br>
+
+    {% if form %}
+        <form method="post" enctype="multipart/form-data">
+            {% for el in form %}
+                {{el}}
+                <br>
+            {% endfor %}
+            <input type="submit" class="btn btn-secondary">
+            {% csrf_token %}
+        </form>
+    {% endif %}
+{% endblock %}

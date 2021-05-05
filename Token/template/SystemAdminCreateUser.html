@@ -1,0 +1,48 @@
+{% extends 'SystemAdminBase.html' %}
+
+{% block username %}
+    {{ user }}
+{% endblock username %}
+
+{% block content %}
+    {% for message in messages %}
+        {% if message.extra_tags == 'usercreated' %}
+          <div class="alert alert-primary" role="alert">
+              {{ message }}
+          </div>
+        {% endif %}
+        {% if message.extra_tags == 'Invalid_User_info' %}
+          <div class="alert alert-danger" role="alert">
+              {{ message }}
+          </div>
+        {% endif %}
+        {% if message.extra_tags == 'username' %}
+          <div class="alert alert-danger" role="alert">
+              {{ message }}
+          </div>
+        {% endif %}
+        {% if message.extra_tags == 'email' %}
+          <div class="alert alert-danger" role="alert">
+              {{ message }}
+          </div>
+        {% endif %}
+        {% if message.extra_tags == 'password' %}
+          <div class="alert alert-danger" role="alert">
+              {{ message }}
+          </div>
+        {% endif %}
+    {% endfor %}
+    {% if form %}
+        <form method="post">
+            {% csrf_token %}
+            {{form.type_of_user}}
+            {{ form.username }}
+            {{ form.first_name }}
+            {{ form.last_name }}
+            {{ form.email }}
+            {{ form.password1 }}
+            {{ form.password2 }}
+            <button type="submit" class="btn btn-secondary">Submit</button>
+        </form>
+    {% endif %}
+{% endblock content %}

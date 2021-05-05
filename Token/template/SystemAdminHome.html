@@ -1,0 +1,41 @@
+{% extends 'SystemAdminBase.html' %}
+
+{% block username %}
+    {{ user }}
+{% endblock username %}
+
+
+{% block content %}
+    {% for message in messages %}
+            {% if message.extra_tags == 'success' %}
+              <div class="alert alert-success" role="alert">
+                  {{ message }}
+              </div>
+            {% endif %}
+            {% if message.extra_tags == 'tokendeleted' %}
+              <div class="alert alert-success" role="alert">
+                  {{ message }}
+              </div>
+            {% endif %}
+    {% endfor %}
+    <row>
+        <script>
+            var counter = 0;
+        </script>
+        <div class='row'>
+            {% for token in tokens %}
+            <div class='column'>
+                  <div class='card' id= {{token.id}}>
+                      <p class='price'>For: {{token.token_type_name}}</p>
+                      <p class='price'>Token Id: {{token.id}}</p>
+                      <p class='price'>Generated: {{token.completed_time}}</p>
+                      <p class="price">Created by: {{token.created_by}}</p>
+                      <p><button><a class = 'text' href="{% url 'SeeProgress' token_id=token.id|add:'0' %}">See Progress </a></button></p>
+                  </div>
+                  <br>
+            </div>
+            <br>
+            {% endfor %}
+        </div>
+    </row>
+{% endblock content %}

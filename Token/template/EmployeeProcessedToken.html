@@ -1,0 +1,27 @@
+{% extends 'EmployeeBase.html' %}
+
+{% block username %}
+    {{ user }}
+{% endblock username %}
+{% block content %}
+    <div class='row'>
+
+    {% for each_token in tokens %}
+        <div class='column'>
+            <div class='card'>
+              <h3 class = 'temp4'>{{each_token.token_type_name}}</h3>
+              <p class='price'>Token ID: {{each_token.token_id}}</p>
+              <p class='price'>Created By: {{each_token.created_by}}</p>
+                <p class="price">Previously Processed by: {{each_token.username}}</p>
+                <p>Current Step: {{each_token.step}}</p>
+              <p>State of Emergency: {{each_token.state_of_emergency}}</p>
+           
+              <a class='text btn btn-success' href="{% url 'employeeprocessedtokenprogress' token_id=each_token.token_id|add:'0' %}">See Process</a>
+            </div>
+            <br>
+        </div>
+    {% endfor %}
+
+    </div>
+
+{% endblock content %}

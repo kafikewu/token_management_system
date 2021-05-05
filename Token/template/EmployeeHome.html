@@ -1,0 +1,32 @@
+{% extends 'EmployeeBase.html' %}
+
+{% block username %}
+    {{ user }}
+{% endblock username %}
+
+
+{% block content %}
+
+    <div class="alert alert-info" role="alert">
+        You have {{number_of_tokens}} unprocessed tokens
+    </div>
+
+
+
+    <div class='row'>
+
+    {% for each_token in tokens %}
+        <div class='column'>
+            <div class='card'>
+              <h3 class = 'temp4'>{{each_token.token_type_name}}</h3>
+              <p class='price'>Token ID: {{each_token.token_id}}</p>
+                <p class="price">Previously Processed by: {{each_token.username}}</p>
+                <p>Current Step: {{each_token.step}}</p>
+              <p>State of Emergency: {{each_token.state_of_emergency}}</p>
+              <p><button><a class = 'text' href="{% url 'employeeprocesstoken' token_id=each_token.token_id|add:'0' step=each_token.step|add:'0' %}">Process</a></button></p>
+            </div>
+        </div>
+    {% endfor %}
+
+    </div>
+{% endblock content %}

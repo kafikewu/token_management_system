@@ -1,0 +1,109 @@
+{% extends 'SystemAdminBase.html' %}
+{% load poll_extras	%}
+{% block username %}
+    {{ user }}
+{% endblock username %}
+{% block content %}
+    <div style="width:50%;height: 50%; margin-left: auto; margin-right: auto;">
+		<canvas id="canvas"></canvas>
+	</div>
+    {% for current_token in tokenprogress %}
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h1 class="display-8"></h1>
+              <p>Processed by: {{current_token.username}}</p>
+              <p>To: {{current_token.to}}</p>
+              <p>Approval: {{current_token.approval}}</p>
+              <p>State of Emergency: {{current_token.state_of_emergency}}</p>
+              <p>Completed Time: {{current_token.completed_time}}</p>
+              {% for key, value in current_token.body.items %}
+			  {% if not value|ifattachment %}
+					<p>{{key}}: {{value}}</p>
+				{% else %}
+					<p>{{key}}: <a href="{% url 'studentdownload' file_name=value|getdir %}" download>Click here to download the file</a></p>
+				{% endif %}
+              {% endfor %}
+          </div>
+        </div>
+    {% endfor %}
+    <form method="get">
+        <a class="btn btn-secondary" href="{% url 'SystemAdminDeleteToken' token_id=token_id|add:'0' %}">Delete This Token</button></a>
+    </form>
+
+
+
+
+<script>
+    var config = {
+			type: 'line',
+			data: {
+				xLabels: [
+				    {% for i in xaxis%}
+				        '{{i}}',
+				    {% endfor%}
+
+				],
+				yLabels: [
+                        '0', '1'
+
+				],
+				datasets: [{
+					label: '0 = Denied, 1 = Approved',
+					data: [
+					    {% for i in yaxis%}
+				            {{i|lower}},
+				        {% endfor%}
+					],
+					fill: false,
+					borderColor: window.chartColors.red,
+					backgroundColor: window.chartColors.red
+				},
+				{
+					label: '0 = Not Urgent, 1 = Urgent',
+					data: [
+					    {% for i in yaxis2%}
+				            {{i|lower}},
+				        {% endfor%}
+					],
+					fill: false,
+					borderColor: window.chartColors.blue,
+					backgroundColor: window.chartColors.blue
+				},
+			]
+			},
+			options: {
+				responsive: true,
+				title: {
+					display: true,
+					text: 'Token Progress'
+				},
+				scales: {
+					x: {
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Month'
+						}
+					},
+					y: {
+						type: 'category',
+						position: 'left',
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'idk'
+						},
+						reverse: true
+					}
+				}
+			}
+		};
+
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myLine = new Chart(ctx, config);
+		};
+</script>
+
+
+{% endblock content %}

@@ -1,0 +1,119 @@
+{% extends 'SystemAdminBase.html' %}
+
+{% block username %}
+    {{ user }}
+{% endblock username %}
+
+
+{% block content %}
+    {% for message in messages %}
+            {% if message.extra_tags == 'success' %}
+              <div class="alert alert-success" role="alert">
+                  {{ message }}
+              </div>
+            {% endif %}
+            {% if message.extra_tags == 'tokendeleted' %}
+              <div class="alert alert-success" role="alert">
+                  {{ message }}
+              </div>
+            {% endif %}
+    {% endfor %}
+    {% if options %}
+    <div class="form-group">
+          <button class="btn btn-white dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Select Number of Steps
+          </button>
+          <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                {% for i in options %}
+                  <a class="dropdown-item btn btn-secondary" href="{% url 'CreateTokenTypeBody' number_of_steps=i|add:'0' %}">{{i}}</a>
+                {% endfor %}
+          </div>
+    </div>
+    {% endif %}
+    <script>
+        var bodyElements = new Array();
+    </script>
+    {% if number_of_steps %}
+        <form method="post"> {% csrf_token %}
+            <input type="text" class="form-control" required placeholder="Name of The Token" name="Token-name">
+            <label class="label pt-2" for="Token-can-create" >Who can access it?</label>
+            <select class="form-control" name="Token-can-create">
+                <option value="systemadmins">System Admins</option>
+                <option value="employees">Employees</option>
+                <option value="students">Students</option>
+            </select>
+            <br>
+            {% with ''|center:number_of_steps as range %}
+            {% for _ in range %}
+                <div class="jumbotron">
+                  <div class="container-fluid" id="jt-{{ forloop.counter }}">
+                      <p class="mx-auto">Step: {{ forloop.counter }}</p>
+                      <input type="text" class="form-control" required placeholder="Name of The Genre of The Creator e.g. Student" name="name-{{ forloop.counter }}">
+                      <br>
+                      <label for="who-{{ forloop.counter }}" >Who can access it?</label>
+                        <select class="form-control" name="who-{{ forloop.counter }}">
+                            <option value="systemadmins">System Admins</option>
+                            <option value="employees">Employees</option>
+                            <option value="students">Students</option>
+                        </select>
+                      <p class="pt-3">Elements:</p>
+                      <!--<div class="pl-1 row w-50">
+                          <div class="w-50">Email</div>
+                          <div class="w-50">email</div>
+                      </div>-->
+                        <script>
+                            bodyElements[{{ forloop.counter }}] = 1;
+                        </script>
+                      <div class="pl-1 row w-50" id="body-{{ forloop.counter }}">
+                          <input type="text" class="form-control w-50" required placeholder="Element Name" name="body-{{ forloop.counter }}-el-1">
+                          <select class=" w-50 form-control" name="body-{{ forloop.counter }}-type-1">
+                              <option value="char">Small Texts</option>
+                              <option value="int">Integer</option>
+                              <option value="text">Texts</option>
+                              <option value="file">File</option>
+                          </select>
+                      </div>
+                      <button type="button" onclick="addBodyElement({{ forloop.counter }})" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Add Element</button>
+                  </div>
+                </div>
+            {% endfor %}
+            {% endwith %}
+            <button class="btn btn-lg  btn-secondary p-2 " type="submit">Confirm Submission</button>
+        </form>
+    <script>
+        function addBodyElement(bodyNo)
+        {
+            bodyElements[bodyNo]++;
+            var parent = document.getElementById("body-"+bodyNo);
+            var inputBTN = document.createElement("input");
+            inputBTN.setAttribute("type", "text");
+            inputBTN.setAttribute("class", "form-control w-50");
+            inputBTN.setAttribute("placeholder", "Element Name");
+            inputBTN.required = true;
+            inputBTN.setAttribute("name", "body-"+bodyNo+"-el-"+bodyElements[bodyNo]);
+            parent.appendChild(inputBTN)
+            var selectBTN = document.createElement("select");
+            selectBTN.setAttribute("class", "w-50 form-control");
+            selectBTN.setAttribute("name", "body-"+bodyNo+"-type-"+bodyElements[bodyNo]);
+            var option1 = document.createElement("option");
+            option1.text = "Small Texts";
+            option1.value = "char"
+            selectBTN.appendChild(option1);
+            var option2 = document.createElement("option");
+            option2.text = "Integer";
+            option2.value = "int"
+            selectBTN.appendChild(option2);
+            var option3 = document.createElement("option");
+            option3.text = "Texts";
+            option3.value = "text";
+            selectBTN.appendChild(option3);
+            var option4 = document.createElement("option");
+            option4.text = "File";
+            option4.value = "file";
+            selectBTN.appendChild(option4);
+            parent.appendChild(selectBTN);
+            
+        }
+    </script>
+    {% endif %}
+{% endblock content %}

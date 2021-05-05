@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'logcss.css' %}" />
+    <title></title>
+  </head>
+  <body>
+
+    <div class="login-page">
+      <div class="form">
+        <form class="register-form" action = "#" method = "post">
+
+        </form>
+    <form class="login-form" action = "sign_up" method = "POST"> {% csrf_token %}
+
+      {{ form.username }}
+      {% if messages %}
+        {% for message in messages %}
+            {% if message.extra_tags == 'username' %}
+              <p>{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+      {% endif %}
+      {{ form.first_name }}
+      {{ form.last_name }}
+      {{ form.email }}
+      {% if messages %}
+        {% for message in messages %}
+            {% if message.extra_tags == 'email' %}
+              <p>{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+      {% endif %}
+      {{ form.password1 }}
+      {{ form.password2 }}
+      {% if messages %}
+        {% for message in messages %}
+            {% if message.extra_tags == 'password' %}
+              <p>{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+      {% endif %}
+      <button>create</button>
+      <p id="txt3" style=" display : none" class="message">Signed up. Click <a href="log.php">Here</a>.</p>
+      <p id = "txt4" style=" display : block" class="message">Already registered? <a href="/">Sign In</a></p>
+    </form>
+    </div>
+
+</body>

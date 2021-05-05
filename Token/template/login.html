@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'logcss.css' %}" />
+    <title></title>
+    <script>
+    $('.message a').click(function(){
+    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+});
+    </script>
+    </head>
+  <body>
+
+    <div class="login-page">
+      <div class="form">
+        <form class="register-form" method = "POST">
+
+
+          <button>create</button>
+          <p class="message">Already registered? <a href="#">Sign In</a></p>
+        </form>
+    <form class="login-form" method = "POST">{% csrf_token %}
+        {% if messages %}
+          {% for message in messages %}
+              {% if message.extra_tags == 'usercreated' %}
+                <p>{{ message }}</p>
+              {% endif %}
+          {% endfor %}
+        {% endif %}
+       {{ form.username }}
+       {{ form.password }}
+       {% if messages %}
+        {% for message in messages %}
+            {% if message.extra_tags == 'invalid' %}
+              <p>{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+      {% endif %}
+      <button>login</button>
+      <p id = "txt1" class = "message" style="display : none">Wrong Username or Password</p>
+      <p class="message">Not registered? <a href="/sign_up">Create an account</a></p>
+    </form>
+    </div>
+  </div>
+  </body>
+</html>

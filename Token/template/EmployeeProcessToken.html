@@ -1,0 +1,134 @@
+{% extends 'EmployeeBase.html' %}
+{% load poll_extras %}
+{% block username %}
+    {{ user }}
+{% endblock username %}
+
+
+{% block content %}
+    {% if messages %}
+            {% for message in messages %}
+                {% if message.extra_tags == 'Invalid_User_info' %}
+                  <div class="alert alert-danger" role="alert">
+                      {{ message }}
+                  </div>
+                {% endif %}
+                {% if message.extra_tags == 'valid_response' %}
+                  <div class="alert alert-success" role="alert" id = "response">
+                      {{ message }}
+
+                  </div>
+                {% endif %}
+            {% endfor %}
+    {% endif %}
+    <div style="width:50%;height: 50%; margin-left: auto; margin-right: auto;">
+		<canvas id="canvas"></canvas>
+	</div>
+    {% for current_token in tokenprogress %}
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h1 class="display-8"></h1>
+              <p>Processed by: {{current_token.username}}</p>
+              <p>To: {{current_token.to}}</p>
+              <p>Approval: {{current_token.approval}}</p>
+              <p>State of Emergency: {{current_token.state_of_emergency}}</p>
+              <p>Completed Time: {{current_token.completed_time}}</p>
+              {% for key, value in current_token.body.items %}
+				{% if not value|ifattachment %}
+				<p>{{key}}: {{value}}</p>
+				{% else %}
+				<p>{{key}}: <a href="{% url 'employeedownload' file_name=value|getdir %}" download>Click here to download the file</a></p>
+				{% endif %}
+              {% endfor %}
+          </div>
+        </div>
+    {% endfor %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="jumbotron jumbotron-fluid" id="formcontainer">
+          <div class="container">
+            {{form}}
+            <input class="btn btn-secondary" type="submit">
+          </div>
+        </div>
+
+    </form>
+
+<script>
+    var myEle = document.getElementById("response");
+    if(myEle){
+        document.getElementById("formcontainer").style.display = "none";
+    }
+    var config = {
+			type: 'line',
+			data: {
+				xLabels: [
+				    {% for i in xaxis%}
+				        '{{i}}',
+				    {% endfor%}
+
+				],
+				yLabels: [
+                        '0', '1'
+
+				],
+				datasets: [{
+					label: '0 = Denied, 1 = Approved',
+					data: [
+					    {% for i in yaxis%}
+				            {{i|lower}},
+				        {% endfor%}
+					],
+					fill: false,
+					borderColor: window.chartColors.red,
+					backgroundColor: window.chartColors.red
+				},
+				{
+					label: '0 = Not Urgent, 1 = Urgent',
+					data: [
+					    {% for i in yaxis2%}
+				            {{i|lower}},
+				        {% endfor%}
+					],
+					fill: false,
+					borderColor: window.chartColors.blue,
+					backgroundColor: window.chartColors.blue
+				},
+			]
+			},
+			options: {
+				responsive: true,
+				title: {
+					display: true,
+					text: 'Token Progress'
+				},
+				scales: {
+					x: {
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Month'
+						}
+					},
+					y: {
+						type: 'category',
+						position: 'left',
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'idk'
+						},
+						reverse: true
+					}
+				}
+			}
+		};
+
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myLine = new Chart(ctx, config);
+		};
+</script>
+
+
+{% endblock content %}

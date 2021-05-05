@@ -1,0 +1,38 @@
+{% extends "StudentBase.html" %}
+{% load poll_extras %}
+{% block username %}
+    {{ user }}
+{% endblock %}
+
+
+{% block content %}
+    {% for message in messages %}
+            {% if message.extra_tags == 'success' %}
+              <div class="alert alert-success" role="alert">
+                  {{ message }}
+              </div>
+            {% endif %}
+            {% if message.extra_tags == 'tokendeleted' %}
+              <div class="alert alert-success" role="alert">
+                  {{ message }}
+              </div>
+            {% endif %}
+    {% endfor %}
+<row>
+    <div class='row'>
+        {% for token in tokens %}
+        <div class='column'>
+              <div class='card'>
+                  <p class='price'>{{token.token_type_name}}</p>
+                  <p class='price'>{{token.id}}</p>
+                  <p class='price'>{{token.completed_time}}</p>
+                  <p class='price'>{{token.body|cut:'"'|cut:'{'|cut:'}' }}</p>
+                  <p><button><a class = 'text' href="{% url 'tokenprogress' token_id=token.id|add:'0' %}">See Progress </a></button></p>
+              </div>
+              <br>
+        </div>
+        {% endfor %}
+    </div>
+</row>
+{% endblock %}
+

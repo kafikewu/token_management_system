@@ -1,0 +1,106 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'navbar.css' %}" />
+    <link rel="stylesheet" href="{% static 'cards.css' %}" />
+    <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'chart.min.js' %}"></script>
+	<script src="{% static 'utils.js' %}"></script>
+    <style>
+    .text {
+      text-decoration-style: solid;
+      text-transform: uppercase;
+      color: white;
+      text-decoration: none;
+    }
+    .text:hover {
+      color: white;
+      text-decoration: none;
+    }
+    .foter{
+      position: sticky;
+      left: 0;
+      bottom: -50px;
+      height: 100px;
+      width: 100%;
+      background-color: #f1f1f1;;
+      color: black;
+      text-align: center;
+      box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.2);
+    }
+    .temp5{
+      padding: 35px;
+      text-transform: uppercase;
+      color: #000;
+      opacity: 0.5;
+      font-family: "Roboto", sans-serif;
+    }
+    .temp5 a{
+      color: #4CAF50;
+      text-decoration: none;
+    }
+    </style>
+  </head>
+  <body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="#">Hardhome</a>
+  <ul class="navbar-nav mr-auto">
+
+     <li class="nav-item active">
+       <a class="nav-link" href="{% url 'employeeshome' %}">Home <span class="sr-only">(current)</span></a>
+     </li>
+     <li class="nav-item">
+       <a class="nav-link" href="{% url 'employeeprocessedtoken' %}">Your Processed Tokens</a>
+     </li>
+     </ul>
+
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {% block username %}
+
+              {% endblock %}
+
+        </a>
+          <!-- Here's the magic. Add the .animate and .slide-in classes to your .dropdown-menu and you're all set! -->
+          <div class="dropdown-menu dropdown-menu-right animate slideIn" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="orders.php" id = "drop1"></a>
+            <a class="dropdown-item" href="#">About You</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'logout' %}">Sign Out</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<br>
+<br>
+
+ <script>
+    function adder(tempvar)
+    {
+      temp = tempvar;
+      document.getElementById('drop1').innerHTML = temp + '$ in Cart';
+    }
+
+ </script>
+    <div class="container-fluid">
+    {% block content %}
+
+    {% endblock %}
+    </div>
+  </body>
+</html>
